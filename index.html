@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام الدعم الفني</title>
+    <!-- رابط ستايل بوتستراب الجاهز -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- أيقونات بوتستراب للإعدادات والوضع الداكن والاتصال والأسهم -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <style>
+        /* تعريف متغيرات الألوان للوضع الفاتح والداكن مع تأثير الشفافية */
+        :root {
+            --bg-body: #e2e8f0;                /* خلفية أساسية رمادية هادئة ومائلة للأزرق الخفيف */
+            --bg-overlay: rgba(226, 232, 240, 0.85); 
+            --bg-card: rgba(255, 255, 255, 0.95);   /* كروت بيضاء ناصعة لتبرز فوق الخلفية الغامقة */
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --input-bg: #ffffff;
+            --shadow-color: rgba(15, 23, 42, 0.06);
+            --header-color: #0f172a;
+            --accent-color: #0d6efd;
+            --blur-strength: 12px; /* قوة عزل الخلفية خلف الكروت */
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #0f172a;                     /* لون الخلفية الأساسي بالليل */
+            --bg-overlay: rgba(15, 23, 42, 0.9);    
+            --bg-card: rgba(30, 41, 59, 0.8);      /* كروت داكنة زجاجية شفافة */
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --input-bg: #1e293b;
+            --shadow-color: rgba(0, 0, 0, 0.25);
+            --header-color: #ffffff;
+            --accent-color: #3b82f6;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%231e293b' fill-opacity='0.03'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm27 13c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 9c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9 62c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm44-5c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-27-2c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/g%3E%3C/svg%3E");
+            color: var(--text-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            padding-top: 30px;
+            position: relative;
+            z-index: 1;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: -1;
+            transition: background 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            background-color: var(--bg-body);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm27 13c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 9c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9 62c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm44-5c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm-27-2c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* تنسيق الكروت لتبرز بوضوح وجمال فوق الخلفية */
+        .card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(var(--blur-strength)); /* تأثير تغبيش الخلفية */
+            -webkit-backdrop-filter: blur(var(--blur-strength));
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px -5px var(--shadow-color);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* جعل عناوين الكروت القابلة للطي قابلة للضغط */
+        .card-toggle-btn {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: right;
+            padding: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--header-color);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+        .card-toggle-btn:focus {
+            outline: none;
+        }
+
+        .card-toggle-btn .bi-chevron-down {
+            transition: transform 0.3s ease;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        /* لفّ السهم عند فتح الكارت */
+        .card-toggle-btn[aria-expanded="true"] .bi-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .card h4 {
+            color: var(--header-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* تنسيق حقول الإدخال */
+        .form-control, .form-select {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* تنسيق الجدول */
+        .table {
+            color: var(--text-main);
+            margin-bottom: 0;
+        }
+        .table thead th {
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--text-main);
+            border-bottom: 2px solid var(--border-color);
+            padding: 14px 10px;
+            font-weight: 700;
+        }
+        [data-theme="dark"] .table thead th {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+        .table tbody td {
+            padding: 14px 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        /* تلوين وتكبير عنوان الصفحة الرئيسي ليصبح بارزاً وأنيقاً */
+        h2.text-center {
+            font-size: 2.2rem; 
+            font-weight: 800;    
+            color: var(--header-color);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            margin-top: 15px;
+            margin-bottom: 35px;
+            letter-spacing: -0.5px;
+        }
+
+        /* تنسيق اللوجو */
+        .system-logo {
+            max-width: 110px; /* التحكم بحجم عرض اللوجو */
+            height: auto;
+            border-radius: 50%; /* لجعل اللوجو دائري وحواف ناعمة */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            transition: transform 0.3s ease;
+        }
+        .system-logo:hover {
+            transform: scale(1.05); /* حركة تكبير خفيفة وتفاعلية عند تمرير الماوس */
+        }
+
+        /* تنسيق أزرار الاتصال لتبدو بشكل متناسق ومريح */
+        .btn-contact {
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* تباعد بين الأيقونة والاسم */
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-contact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* ستايل قائمة اختيار الحالة */
+        .status-select {
+            font-size: 0.85rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            width: auto;
+            display: inline-block;
+        }
+        .status-pending { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        .status-processing { background-color: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+        .status-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+
+        /* تنسيق الألسنة والتبويبات الخاصة بالجداول */
+        .nav-tabs {
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 10px;
+            gap: 10px; /* تباعد بين الأزرار */
+        }
+        .nav-link {
+            color: var(--text-muted);
+            font-weight: 600;
+            border: none !important;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 12px 18px;
+            border-radius: 10px 10px 0 0 !important;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-link:hover {
+            color: var(--header-color);
+            background-color: rgba(0,0,0,0.02) !important;
+        }
+        [data-theme="dark"] .nav-link:hover {
+            background-color: rgba(255,255,255,0.02) !important;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: rgba(13, 110, 253, 0.05) !important;
+            color: var(--accent-color) !important;
+            font-weight: bold;
+        }
+        [data-theme="dark"] .nav-tabs .nav-link.active {
+            background-color: rgba(59, 130, 246, 0.1) !important;
+        }
+        .nav-tabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px 3px 0 0;
+        }
+        .badge {
+            font-size: 0.8rem;
+            padding: 5px 9px;
+            border-radius: 12px;
+        }
+
+        /* ستايل خاص بالطباعة وتصدير البروتوكول */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printArea, #printArea * {
+                visibility: visible;
+            }
+            #printArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                direction: rtl;
+                padding: 40px;
+                color: #000 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            /* إخفاء ويدجت الشات الخارجي تماماً عند الطباعة */
+            iframe, .tawk-min-container, #tawkchat-iframe-container {
+                display: none !important;
+                visibility: hidden !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container my-5">
+        <!-- قسم الهيدر (اللوجو والعنوان الرئيسي) -->
+        <div class="text-center mb-5 no-print">
+            <!-- تم تعديل مسار اللوجو ليتطابق مع اسم الصورة الفعلي في الفولدر لديك -->
+            <img src="logo.jpg.jpeg" alt="لوجو شركة الزهراء" class="system-logo mb-3">
+            <h2 class="text-center m-0">نظام الدعم الفني</h2>
+        </div>
+        
+        <div class="row">
+            <!-- عمود التحكم (الفورم + الإعدادات + الاتصال) -->
+            <div class="col-md-4 no-print">
+                
+                <!-- كارت الاتصال المباشر والجروب -->
+                <div class="card shadow-sm text-center">
+                    <h4 class="m-0 pb-3" style="border-bottom: 2px solid var(--border-color); font-size: 1.25rem;">تواصل مباشر مع الدعم</h4>
+                    <p class="text-muted my-3" style="font-size: 0.95rem;">هاتف: 01031056010</p>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <a href="tel:201031056010" class="btn btn-primary w-100 btn-contact">
+                                <i class="bi bi-telephone-fill"></i> اتصال هاتفي
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <!-- تم ربطه بجروب الواتساب الخاص بك مباشرة مع استخدام أيقونة الواتس الأصلية -->
+                            <a href="https://chat.whatsapp.com/Iin9R8ee1cg6WIV6Uu6p66" target="_blank" class="btn btn-success w-100 btn-contact" style="background-color: #25D366; border-color: #25D366;">
+                                <i class="bi bi-whatsapp"></i> جروب الواتس
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- كارت بيانات عميل جديد (قابل للفتح والقفل) -->
+                <div class="card shadow-sm">
+                    <!-- عنوان الكارت كزرار للفتح والقفل -->
+                    <button class="card-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#ticketCollapse" aria-expanded="false" aria-controls="ticketCollapse">
+                        <span>بيانات عميل جديد</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    
+                    <!-- المحتوى القابل للطي -->
+                    <div class="collapse mt-3" id="ticketCollapse">
+                        <hr style="border-color: var(--border-color);">
+                        <form id="ticketForm">
+                            <div class="mb-3">
+                                <label class="form-label">اسم العميل</label>
+                                <input type="text" id="clientName" class="form-control" placeholder="مثال: شركة الزهراء" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">عنوان المشكلة</label>
+                                <input type="text" id="ticketSubject" class="form-control" placeholder="مثال: مشكلة في طابعة الفواتير" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">التفاصيل</label>
+                                <textarea id="ticketDesc" class="form-control" rows="3" placeholder="اكتب تفاصيل المشكلة هنا..." required></textarea>
+                            </div>
+                            
+                            <!-- خيار التنبيه التلقائي عبر جروب الواتساب -->
+                            <div class="form-check form-switch mb-3">
+                                <input class="form-check-input" type="checkbox" id="sendAutoSms" checked>
+                                <label class="form-check-label" style="font-size: 0.9rem;">إرسال الفاتورة / المشكلة للجروب تلقائياً</label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2">حفظ وإرسال للجروب</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- كارت الإعدادات (فيه الوضع الداكن فقط وقابل للفتح والقفل) -->
+                <div class="card shadow-sm">
+                    <!-- عنوان الكارت كزرار للفتح والقفل -->
+                    <button class="card-toggle-btn" type="button" data-bs-toggle="collapse" data-bs-target="#settingsCollapse" aria-expanded="false" aria-controls="settingsCollapse">
+                        <span>الإعدادات</span>
+                        <i class="bi bi-chevron-down"></i>
+                    </button>
+                    
+                    <!-- المحتوى القابل للطي -->
+                    <div class="collapse mt-3" id="settingsCollapse">
+                        <hr style="border-color: var(--border-color);">
+                        
+                        <!-- تشغيل وإيقاف الوضع الداكن -->
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span>الوضع الداكن (Dark Mode)</span>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="themeToggle" style="cursor: pointer; width: 45px; height: 23px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- لوحة عرض وتصنيف العملاء المتقدمة -->
+            <div class="col-md-8 no-print">
+                <div class="card shadow-sm">
+                    <!-- قائمة تبويبات التنقل -->
+                    <nav>
+                        <div class="nav nav-tabs border-0" id="nav-tab" role="tablist">
+                            <!-- تبويب قائمة الانتظار -->
+                            <button class="nav-link active" id="nav-waiting-tab" data-bs-toggle="tab" data-bs-target="#nav-waiting" type="button" role="tab" aria-controls="nav-waiting" aria-selected="true">
+                                قائمة الانتظار <span class="badge bg-warning text-dark" id="countWaiting">0</span>
+                            </button>
+                            <!-- تبويب قيد المعالجة -->
+                            <button class="nav-link" id="nav-active-tab" data-bs-toggle="tab" data-bs-target="#nav-active" type="button" role="tab" aria-controls="nav-active" aria-selected="false">
+                                العملاء الحاليين <span class="badge bg-primary" id="countActive">0</span>
+                            </button>
+                            <!-- تبويب المنتهي -->
+                            <button class="nav-link" id="nav-finished-tab" data-bs-toggle="tab" data-bs-target="#nav-finished" type="button" role="tab" aria-controls="nav-finished" aria-selected="false">
+                                العمليات التامة <span class="badge bg-success" id="countFinished">0</span>
+                            </button>
+                        </div>
+                    </nav>
+
+                    <hr style="border-color: var(--border-color); margin-top: 0; margin-bottom: 20px;">
+
+                    <!-- محتوى التبويبات الثلاثة -->
+                    <div class="tab-content" id="nav-tabContent">
+                        
+                        <!-- 1. جدول قائمة الانتظار -->
+                        <div class="tab-pane fade show active" id="nav-waiting" role="tabpanel" aria-labelledby="nav-waiting-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>العميل</th>
+                                            <th>المشكلة</th>
+                                            <th>التفاصيل</th>
+                                            <th>الحالة</th>
+                                            <th>إجراء</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="waitingList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 2. جدول العملاء الحاليين -->
+                        <div class="tab-pane fade" id="nav-active" role="tabpanel" aria-labelledby="nav-active-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>العميل</th>
+                                            <th>المشكلة</th>
+                                            <th>التفاصيل</th>
+                                            <th>الحالة</th>
+                                            <th>إجراء</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="activeList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 3. جدول العمليات التامة -->
+                        <div class="tab-pane fade" id="nav-finished" role="tabpanel" aria-labelledby="nav-finished-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>العميل</th>
+                                            <th>المشكلة</th>
+                                            <th>التفاصيل</th>
+                                            <th>الحالة</th>
+                                            <th>إجراء</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="finishedList"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مساحة مخفية مخصصة لإنشاء وطباعة بروتوكول تسليم العمل للعميل -->
+    <div id="printArea" class="d-none">
+        <div class="text-center mb-4">
+            <h2 style="color: #2c3e50; font-weight: bold;">بروتوكول تسليم وإتمام أعمال الصيانة والدعم الفني</h2>
+            <p class="text-muted">نظام إدارة العملاء الذكي</p>
+        </div>
+        <hr style="border-top: 2px solid #2c3e50;">
+        <table class="table table-bordered mt-4">
+            <tbody>
+                <tr>
+                    <th style="width: 30%; background-color: #f8f9fa;">اسم العميل / الشركة</th>
+                    <td id="printClientName"></td>
+                </tr>
+                <tr>
+                    <th style="background-color: #f8f9fa;">عنوان ورمز المشكلة</th>
+                    <td id="printSubject"></td>
+                </tr>
+                <tr>
+                    <th style="background-color: #f8f9fa;">التفاصيل الفنية والأعطال</th>
+                    <td id="printDesc"></td>
+                </tr>
+                <tr>
+                    <th style="background-color: #f8f9fa;">حالة الطلب النهائية</th>
+                    <td style="color: green; font-weight: bold;">تم الحل بنجاح وجاهز للتسليم</td>
+                </tr>
+                <tr>
+                    <th style="background-color: #f8f9fa;">تاريخ تحرير التقرير</th>
+                    <td id="printDate"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="row mt-5 pt-5">
+            <div class="col-6 text-center">
+                <h5>توقيع مهندس الصيانة</h5>
+                <p class="mt-4">_______________________</p>
+            </div>
+            <div class="col-6 text-center">
+                <h5>توقيع مستلم الخدمة (العميل)</h5>
+                <p class="mt-4">_______________________</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- جافا سكريبت الخاص بالبوتستراب -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const ticketForm = document.getElementById('ticketForm');
+        const themeToggle = document.getElementById('themeToggle');
+
+        // عناصر القوائم الثلاثة في الصفحة
+        const waitingList = document.getElementById('waitingList');
+        const activeList = document.getElementById('activeList');
+        const finishedList = document.getElementById('finishedList');
+
+        // عناصر العدادات
+        const countWaiting = document.getElementById('countWaiting');
+        const countActive = document.getElementById('countActive');
+        const countFinished = document.getElementById('countFinished');
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTickets();
+            
+            // تطبيق الوضع الداكن
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.checked = true;
+            }
+        });
+
+        // تشغيل / إيقاف الوضع الداكن
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // عند إرسال فورم عميل جديد
+        ticketForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const client = document.getElementById('clientName').value;
+            const subject = document.getElementById('ticketSubject').value;
+            const desc = document.getElementById('ticketDesc').value;
+            const sendAutoSms = document.getElementById('sendAutoSms').checked;
+
+            const ticket = {
+                id: Date.now().toString(),
+                client,
+                subject,
+                desc,
+                status: 'قيد الانتظار',
+                createdAt: new Date().toLocaleDateString('ar-EG')
+            };
+
+            saveTicket(ticket);
+
+            // إرسال تفاصيل التذكرة منسقة بالكامل لجروب الواتساب الخاص بك فوراً
+            if (sendAutoSms) {
+                const messageText = `🚨 *طلب دعم فني جديد* 🚨%0A%0A*👤 العميل:* ${client}%0A*📌 المشكلة:* ${subject}%0A*📝 التفاصيل:* ${desc}%0A*📅 التاريخ:* ${ticket.createdAt}`;
+                // تم ربطها برابط جروب واتساب الخاص بك مباشرة
+                const whatsappUrl = `https://chat.whatsapp.com/Iin9R8ee1cg6WIV6Uu6p66?text=${messageText}`;
+                window.open(whatsappUrl, '_blank');
+            }
+
+            ticketForm.reset();
+            loadTickets();
+
+            // قفل قائمة إضافة عميل تلقائياً
+            const collapseElement = document.getElementById('ticketCollapse');
+            const bsCollapse = bootstrap.Collapse.getInstance(collapseElement) || new bootstrap.Collapse(collapseElement);
+            bsCollapse.hide();
+        });
+
+        function saveTicket(ticket) {
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            tickets.push(ticket);
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+        }
+
+        // فلترة وعرض وتحديث العدادات
+        function loadTickets() {
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            
+            waitingList.innerHTML = '';
+            activeList.innerHTML = '';
+            finishedList.innerHTML = '';
+
+            let waitCount = 0;
+            let activeCount = 0;
+            let finishCount = 0;
+
+            tickets.forEach(ticket => {
+                let statusClass = 'status-pending';
+                if (ticket.status === 'قيد المعالجة') statusClass = 'status-processing';
+                if (ticket.status === 'تمت العملية بنجاح') statusClass = 'status-success';
+
+                let actionBtn = `<button onclick="deleteTicket('${ticket.id}')" class="btn btn-danger btn-sm">حذف</button>`;
+                if (ticket.status === 'تمت العملية بنجاح') {
+                    actionBtn = `
+                        <button onclick="printProtocol('${ticket.id}')" class="btn btn-info text-white btn-sm me-1" title="طباعة بروتوكول">
+                            <i class="bi bi-printer-fill"></i> بروتوكول
+                        </button>
+                        <button onclick="deleteTicket('${ticket.id}')" class="btn btn-danger btn-sm">حذف</button>
+                    `;
+                }
+
+                const trHTML = `
+                    <tr>
+                        <td><strong>${ticket.client}</strong></td>
+                        <td>${ticket.subject}</td>
+                        <td><small>${ticket.desc}</small></td>
+                        <td>
+                            <select onchange="updateStatus('${ticket.id}', this.value)" class="form-select status-select ${statusClass}">
+                                <option value="قيد الانتظار" ${ticket.status === 'قيد الانتظار' ? 'selected' : ''}>قيد الانتظار</option>
+                                <option value="قيد المعالجة" ${ticket.status === 'قيد المعالجة' ? 'selected' : ''}>قيد المعالجة</option>
+                                <option value="تمت العملية بنجاح" ${ticket.status === 'تمت العملية بنجاح' ? 'selected' : ''}>تمت العملية بنجاح</option>
+                            </select>
+                        </td>
+                        <td>${actionBtn}</td>
+                    </tr>
+                `;
+
+                if (ticket.status === 'قيد الانتظار') {
+                    waitingList.innerHTML += trHTML;
+                    waitCount++;
+                } else if (ticket.status === 'قيد المعالجة') {
+                    activeList.innerHTML += trHTML;
+                    activeCount++;
+                } else if (ticket.status === 'تمت العملية بنجاح') {
+                    finishedList.innerHTML += trHTML;
+                    finishCount++;
+                }
+            });
+
+            countWaiting.textContent = waitCount;
+            countActive.textContent = activeCount;
+            countFinished.textContent = finishCount;
+
+            if (waitCount === 0) {
+                waitingList.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">لا يوجد عملاء في قائمة الانتظار حالياً</td></tr>`;
+            }
+            if (activeCount === 0) {
+                activeList.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">لا يوجد عملاء قيد المعالجة حالياً</td></tr>`;
+            }
+            if (finishCount === 0) {
+                finishedList.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">لا يوجد عمليات تامة ومكتملة حتى الآن</td></tr>`;
+            }
+        }
+
+        function updateStatus(id, newStatus) {
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            tickets = tickets.map(t => {
+                if (t.id.toString() === id.toString()) {
+                    t.status = newStatus;
+                }
+                return t;
+            });
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            loadTickets();
+        }
+
+        function deleteTicket(id) {
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            tickets = tickets.filter(t => t.id.toString() !== id.toString());
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+            loadTickets();
+        }
+
+        // دالة طباعة بروتوكول تسليم العميل
+        function printProtocol(id) {
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            let ticket = tickets.find(t => t.id.toString() === id.toString());
+
+            if (ticket) {
+                document.getElementById('printClientName').innerText = ticket.client;
+                document.getElementById('printSubject').innerText = ticket.subject;
+                document.getElementById('printDesc').innerText = ticket.desc;
+                document.getElementById('printDate').innerText = ticket.createdAt || new Date().toLocaleDateString('ar-EG');
+                
+                const printArea = document.getElementById('printArea');
+                printArea.classList.remove('d-none');
+                window.print();
+                printArea.classList.add('d-none');
+            }
+        }
+    </script>
+
+    <!-- 💬 دمج كود أداة الدردشة الحية والمبعدة (Tawk.to) المجانية بالكامل 💬 -->
+    <script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/65f470fd8d261e1b5f6cb194/default';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script>
+
+</body>
+</html>
